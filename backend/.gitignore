@@ -1,0 +1,14 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+
+# Environment variables
+.env
+
+# Uploads / temp static files
+static/uploads/*
+!static/uploads/.gitkeep
