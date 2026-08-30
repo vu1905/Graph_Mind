@@ -6,3 +6,6 @@ groq
 openai
 pdfplumber
 python-docx
+neo4j==5.24.0
+qdrant-client==1.11.1
+langchain langchain-text-splitters
