@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 480" width="100%" height="100%">
+  <defs>
+    <!-- Gradients -->
+    <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#40E0D0" stop-opacity="0.9"/>
+      <stop offset="45%" stop-color="#008B8B" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#0A3C46" stop-opacity="1"/>
+    </radialGradient>
+
+    <linearGradient id="stemGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#006670"/>
+      <stop offset="100%" stop-color="#0A3641"/>
+    </linearGradient>
+
+    <radialGradient id="nodeGradient" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#14808C"/>
+      <stop offset="100%" stop-color="#083038"/>
+    </radialGradient>
+
+    <linearGradient id="textGraphGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0A1E38"/>
+      <stop offset="100%" stop-color="#071426"/>
+    </linearGradient>
+  </defs>
+
+  <!-- GRAPH MIND LOGO MARK -->
+  <g transform="translate(100, 30)">
+    <!-- 8 Connecting Stems -->
+    <g stroke="url(#stemGradient)" stroke-width="12" stroke-linecap="round">
+      <line x1="100" y1="100" x2="100" y2="34"/>
+      <line x1="100" y1="100" x2="146.67" y2="53.33"/>
+      <line x1="100" y1="100" x2="166" y2="100"/>
+      <line x1="100" y1="100" x2="146.67" y2="146.67"/>
+      <line x1="100" y1="100" x2="100" y2="166"/>
+      <line x1="100" y1="100" x2="53.33" y2="146.67"/>
+      <line x1="100" y1="100" x2="34" y2="100"/>
+      <line x1="100" y1="100" x2="53.33" y2="53.33"/>
+    </g>
+
+    <!-- Outer Central Body Ring -->
+    <circle cx="100" cy="100" r="48" fill="#082A32" stroke="#005F6B" stroke-width="3"/>
+
+    <!-- Inner Glowing Core -->
+    <circle cx="100" cy="100" r="40" fill="url(#centerGlow)"/>
+
+    <!-- Geometric Star Mesh lines -->
+    <g stroke="#66E0E0" stroke-width="1.2" opacity="0.85" fill="none">
+      <!-- Outer Octagon/Star inside core -->
+      <polygon points="100,68 122.6,77.4 132,100 122.6,122.6 100,132 77.4,122.6 68,100 77.4,77.4"/>
+      <!-- Inner geometric diamond connections -->
+      <polygon points="100,75 125,100 100,125 75,100"/>
+      <polygon points="117.7,82.3 117.7,117.7 82.3,117.7 82.3,82.3"/>
+      <line x1="100" y1="68" x2="100" y2="132"/>
+      <line x1="68" y1="100" x2="132" y2="100"/>
+      <line x1="77.4" y1="77.4" x2="122.6" y2="122.6"/>
+      <line x1="122.6" y1="77.4" x2="77.4" y2="122.6"/>
+    </g>
+    
+    <!-- Core Center Bright Spark Dot -->
+    <circle cx="100" cy="100" r="4" fill="#E0FFFF"/>
+
+    <!-- 8 Outer Nodes -->
+    <circle cx="100" cy="30" r="14" fill="url(#nodeGradient)" stroke="#004D56" stroke-width="2.5"/>
+    <circle cx="149.5" cy="50.5" r="14" fill="url(#nodeGradient)" stroke="#004D56" stroke-width="2.5"/>
+    <circle cx="170" cy="100" r="14" fill="url(#nodeGradient)" stroke="#004D56" stroke-width="2.5"/>
+    <circle cx="149.5" cy="149.5" r="14" fill="url(#nodeGradient)" stroke="#004D56" stroke-width="2.5"/>
+    <circle cx="100" cy="170" r="14" fill="url(#nodeGradient)" stroke="#004D56" stroke-width="2.5"/>
+    <circle cx="50.5" cy="149.5" r="14" fill="url(#nodeGradient)" stroke="#004D56" stroke-width="2.5"/>
+    <circle cx="30" cy="100" r="14" fill="url(#nodeGradient)" stroke="#004D56" stroke-width="2.5"/>
+    <circle cx="50.5" cy="50.5" r="14" fill="url(#nodeGradient)" stroke="#004D56" stroke-width="2.5"/>
+  </g>
+
+  <!-- TYPOGRAPHY -->
+  <text x="200" y="315" 
+        text-anchor="middle" 
+        fill="url(#textGraphGrad)" 
+        font-family="'Outfit', 'Montserrat', 'Cinzel', 'Trajan Pro', sans-serif" 
+        font-size="62" 
+        font-weight="700" 
+        letter-spacing="9">GRAPH</text>
+
+  <text x="200" y="380" 
+        text-anchor="middle" 
+        fill="#0A6E78" 
+        font-family="'Outfit', 'Plus Jakarta Sans', 'Inter', sans-serif" 
+        font-size="52" 
+        font-weight="500" 
+        letter-spacing="2">Mind</text>
+</svg>

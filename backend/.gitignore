@@ -12,3 +12,4 @@ venv/
 # Uploads / temp static files
 static/uploads/*
 !static/uploads/.gitkeep
+.agents
