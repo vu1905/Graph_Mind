@@ -1,19 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
 :root {
-  --canvas-bg: #F9FAFB;
-  --surface-bg: #FFFFFF;
-  --text-primary: #18181B;
-  --text-secondary: #71717A;
+  --canvas-bg: #FFFFFF;
+  --surface-bg: #F8FAFC;
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
   --text-muted: #94A3B8;
-  --border-whisper: rgba(226, 232, 240, 0.7);
+  --border-whisper: #E2E8F0;
   --border-accent: rgba(59, 130, 246, 0.3);
-  --accent-blue: #3B82F6;
-  --accent-blue-hover: #2563EB;
-  --shadow-diffused: 0 20px 40px -15px rgba(0, 0, 0, 0.05);
-  --shadow-elevated: 0 25px 50px -12px rgba(59, 130, 246, 0.12);
-  --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --accent-blue: #2563EB;
+  --accent-blue-hover: #1D4ED8;
+  --accent-navy: #0F172A;
+  --shadow-diffused: 0 10px 40px -10px rgba(15, 23, 42, 0.06);
+  --shadow-elevated: 0 20px 40px -12px rgba(37, 99, 235, 0.15);
+  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
-  --radius-card: 2rem;
-  --radius-button: 1rem;
+  --radius-card: 1.5rem;
+  --radius-button: 0.5rem;
 }
 
 * {
@@ -111,6 +114,15 @@ input, textarea, select {
 
 .pulse-glow {
   animation: pulseGlow 2.5s infinite ease-in-out;
+}
+
+@keyframes dash {
+  from {
+    stroke-dashoffset: 40;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 

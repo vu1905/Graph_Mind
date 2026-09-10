@@ -128,27 +128,31 @@ export const GraphMindLogo = ({
     );
   }
 
-  // Default: horizontal layout (Icon + Text)
+  // Default: horizontal layout (Icon + Text on a single crisp line)
   return (
-    <div className={`graph-mind-logo-horizontal ${className}`} style={{ display: 'inline-flex', alignItems: 'center', gap: '10px' }}>
+    <div 
+      className={`graph-mind-logo-horizontal notranslate ${className}`} 
+      translate="no" 
+      style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', textDecoration: 'none', whiteSpace: 'nowrap' }}
+    >
       <GraphMindIcon size={size} />
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', lineHeight: 1 }}>
+      <div style={{ display: 'flex', alignItems: 'center', whiteSpace: 'nowrap', lineHeight: 1 }}>
         <span style={{ 
-          fontFamily: "'Outfit', 'Montserrat', sans-serif", 
-          fontSize: `${size * 0.48}px`, 
+          fontFamily: "'Plus Jakarta Sans', 'Outfit', sans-serif", 
+          fontSize: `${size * 0.58}px`, 
           fontWeight: 800, 
-          letterSpacing: '0.1em',
+          letterSpacing: '-0.02em',
           color: graphTextColor
         }}>
-          GRAPH
+          Graph
         </span>
         <span style={{ 
-          fontFamily: "'Outfit', 'Plus Jakarta Sans', sans-serif", 
-          fontSize: `${size * 0.4}px`, 
-          fontWeight: 600, 
-          letterSpacing: '0.02em',
-          color: mindTextColor,
-          marginTop: '2px'
+          fontFamily: "'Plus Jakarta Sans', 'Outfit', sans-serif", 
+          fontSize: `${size * 0.58}px`, 
+          fontWeight: 700, 
+          letterSpacing: '-0.02em',
+          color: '#2563EB',
+          marginLeft: '1px'
         }}>
           Mind
         </span>

@@ -17,12 +17,32 @@ import {
   ShoppingBag,
   FileCheck,
   Building,
-  Sparkles
+  Sparkles,
+  Terminal,
+  Database,
+  Play
 } from 'lucide-react';
 
 export const KnowledgeEditor = () => {
   const [activeSubTab, setActiveSubTab] = useState('hitl_editor');
   const [searchQuery, setSearchQuery] = useState('');
+
+  // Neo4j Cypher State
+  const [cypherInput, setCypherInput] = useState('MATCH (c:Customer)-[r:SIGNED_CONTRACT]->(k:Contract)\nRETURN c.name, r.duration, k.title LIMIT 10;');
+  const [cypherResults, setCypherResults] = useState([
+    { 'c.name': 'Công ty Cổ phần Bách Khoa Tech', 'r.duration': '24 Tháng', 'k.title': 'Hợp Đồng Cung Cấp Linh Kiện #99' },
+    { 'c.name': 'Tập đoàn Thép Việt Nhật', 'r.duration': '36 Tháng', 'k.title': 'Hợp Đồng Nguyên Vật Liệu Đầu Vào' },
+    { 'c.name': 'Công ty Thương Mại Á Châu', 'r.duration': '12 Tháng', 'k.title': 'Hợp Đồng Mua Bán Xe Đạp Touring' }
+  ]);
+  const [isCypherRunning, setIsCypherRunning] = useState(false);
+
+  // Qdrant Vector State
+  const [qdrantCollection, setQdrantCollection] = useState('enterprise_knowledge');
+  const [qdrantPayloads] = useState([
+    { id: 'vec-901', collection: 'enterprise_knowledge', vector_dim: 1536, metric: 'Cosine', payload: { title: 'Quy Trình Xử Lý Thâm Hụt Hạn Mức Tín Dụng', source: 'SOP_Credit_Risk.docx', score: 0.942 } },
+    { id: 'vec-902', collection: 'cuad_contracts', vector_dim: 1536, metric: 'Cosine', payload: { title: 'Điều Khoản Phụ Lục Hợp Đồng #99', source: 'CUAD_Contract_99.pdf', score: 0.885 } },
+    { id: 'vec-903', collection: 'sales_embeddings', vector_dim: 1536, metric: 'Cosine', payload: { title: 'Lịch Sử Thanh Toán Bách Khoa Tech', source: 'ERP_Customer_Ledger', score: 0.814 } }
+  ]);
   
   // State for HITL Graph Nodes
   const [nodes, setNodes] = useState([
@@ -104,6 +124,25 @@ Bước 3: Nếu thông tin chính xác, Sales Manager kích hoạt phụ lục 
     setTimeout(() => setSopSaved(false), 2500);
   };
 
+  const handleRunCypher = () => {
+    setIsCypherRunning(true);
+    fetch('http://localhost:5000/api/cypher', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cypher: cypherInput })
+    })
+      .then(res => res.json())
+      .then(data => {
+        setIsCypherRunning(false);
+        if (data.data) {
+          setCypherResults(data.data);
+        }
+      })
+      .catch(() => {
+        setIsCypherRunning(false);
+      });
+  };
+
   const filteredNodes = nodes.filter(n => 
     n.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
     n.type.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -118,7 +157,7 @@ Bước 3: Nếu thông tin chính xác, Sales Manager kích hoạt phụ lục 
           <div className="module-badge">Module 2</div>
           <h2 className="module-title">Quản Lý & Chỉnh Sửa Tri Thức (Knowledge Management & HITL Editor)</h2>
           <p className="module-subtitle">
-            Duyệt tài liệu đã Ingest, chuẩn hóa các nút/liên kết thực thể AI extracted (Human-in-the-loop) và biên soạn SOP nội bộ.
+            Duyệt thực thể AI, chạy Cypher Query trên Neo4j DB (Port 7474/7687) và khám phá Qdrant Vector Collections (Port 6333).
           </p>
         </div>
       </div>
@@ -133,6 +172,20 @@ Bước 3: Nếu thông tin chính xác, Sales Manager kích hoạt phụ lục 
         </button>
 
         <button 
+          className={`subtab-btn ${activeSubTab === 'cypher_terminal' ? 'active' : ''}`}
+          onClick={() => setActiveSubTab('cypher_terminal')}
+        >
+          <Terminal size={16} /> Neo4j Cypher / GQL Terminal
+        </button>
+
+        <button 
+          className={`subtab-btn ${activeSubTab === 'qdrant_vectors' ? 'active' : ''}`}
+          onClick={() => setActiveSubTab('qdrant_vectors')}
+        >
+          <Layers size={16} /> Qdrant Vector Collections
+        </button>
+
+        <button 
           className={`subtab-btn ${activeSubTab === 'documents' ? 'active' : ''}`}
           onClick={() => setActiveSubTab('documents')}
         >
@@ -143,7 +196,7 @@ Bước 3: Nếu thông tin chính xác, Sales Manager kích hoạt phụ lục 
           className={`subtab-btn ${activeSubTab === 'sop' ? 'active' : ''}`}
           onClick={() => setActiveSubTab('sop')}
         >
-          <BookOpen size={16} /> SOP & Quy Trình Nội Bộ (Knowledge Authoring)
+          <BookOpen size={16} /> SOP & Quy Trình Nội Bộ
         </button>
       </div>
 
@@ -331,7 +384,105 @@ Bước 3: Nếu thông tin chính xác, Sales Manager kích hoạt phụ lục 
         </div>
       )}
 
-      {/* TAB 2: DOCUMENTS */}
+      {/* TAB 2: NEO4J CYPHER TERMINAL */}
+      {activeSubTab === 'cypher_terminal' && (
+        <div className="panel-box">
+          <div className="panel-title-bar flex-between">
+            <div>
+              <h3>Neo4j Cypher GQL Console (bolt://localhost:7687)</h3>
+              <span className="sub-text">Thực thi truy vấn Cypher trực tiếp trên container neo4j_db với APOC plugins.</span>
+            </div>
+            <button className="primary-btn small" onClick={handleRunCypher} disabled={isCypherRunning}>
+              <Play size={14} /> {isCypherRunning ? 'Đang Thực Thi...' : 'Chạy Cypher Query'}
+            </button>
+          </div>
+
+          <div className="cypher-editor-wrapper mb-4">
+            <textarea 
+              rows={5}
+              className="sop-textarea"
+              style={{ fontFamily: 'monospace', background: '#18181B', color: '#38BDF8', fontSize: '0.95rem' }}
+              value={cypherInput}
+              onChange={e => setCypherInput(e.target.value)}
+            />
+          </div>
+
+          <div className="panel-title-bar">
+            <h4>Kết Quả Trả Về từ Neo4j Database:</h4>
+          </div>
+
+          <table className="custom-table">
+            <thead>
+              <tr>
+                {cypherResults.length > 0 && Object.keys(cypherResults[0]).map(col => (
+                  <th key={col}>{col}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {cypherResults.map((row, idx) => (
+                <tr key={idx}>
+                  {Object.values(row).map((val, i) => (
+                    <td key={i}><code>{val}</code></td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* TAB 3: QDRANT VECTOR COLLECTIONS */}
+      {activeSubTab === 'qdrant_vectors' && (
+        <div className="panel-box">
+          <div className="panel-title-bar flex-between">
+            <div>
+              <h3>Qdrant Vector Database Explorer (http://localhost:6333)</h3>
+              <span className="sub-text">Quản lý các Collection Vector 1536-dim và độ đo Cosine Similarity.</span>
+            </div>
+            <div className="flex-align-gap">
+              <select 
+                value={qdrantCollection} 
+                onChange={e => setQdrantCollection(e.target.value)}
+                style={{ padding: '0.4rem 0.8rem', borderRadius: '0.5rem', background: '#F4F4F5' }}
+              >
+                <option value="enterprise_knowledge">Collection: enterprise_knowledge</option>
+                <option value="cuad_contracts">Collection: cuad_contracts</option>
+                <option value="sales_embeddings">Collection: sales_embeddings</option>
+              </select>
+            </div>
+          </div>
+
+          <table className="custom-table">
+            <thead>
+              <tr>
+                <th>Vector ID</th>
+                <th>Collection Name</th>
+                <th>Dimensions</th>
+                <th>Distance Metric</th>
+                <th>Similarity Score</th>
+                <th>Payload Metadata</th>
+              </tr>
+            </thead>
+            <tbody>
+              {qdrantPayloads.map(vec => (
+                <tr key={vec.id}>
+                  <td><code>{vec.id}</code></td>
+                  <td><span className="edge-relation-pill">{vec.collection}</span></td>
+                  <td>{vec.vector_dim}-dim</td>
+                  <td>{vec.metric}</td>
+                  <td><strong className="text-emerald">{(vec.payload.score * 100).toFixed(1)}% Match</strong></td>
+                  <td>
+                    <code>{JSON.stringify(vec.payload)}</code>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* TAB 4: DOCUMENTS */}
       {activeSubTab === 'documents' && (
         <div className="panel-box">
           <div className="panel-title-bar">
@@ -374,7 +525,7 @@ Bước 3: Nếu thông tin chính xác, Sales Manager kích hoạt phụ lục 
         </div>
       )}
 
-      {/* TAB 3: SOP AUTHORING */}
+      {/* TAB 5: SOP AUTHORING */}
       {activeSubTab === 'sop' && (
         <div className="panel-box">
           <div className="panel-title-bar flex-between">
@@ -415,3 +566,4 @@ Bước 3: Nếu thông tin chính xác, Sales Manager kích hoạt phụ lục 
 };
 
 export default KnowledgeEditor;
+

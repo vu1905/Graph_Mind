@@ -17,17 +17,39 @@ export const DataSourceManager = () => {
   const [activeTab, setActiveTab] = useState('connectors');
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState({
-    lastSync: '2026-09-06 11:45:00',
-    recordsIngested: 124500,
+    lastSync: '2026-09-08 11:30:00',
+    recordsIngested: 619600,
     activeAgents: 4,
-    health: 'Good'
+    health: 'Good (Neo4j 5.18 + Qdrant 1.8.2)'
   });
 
   const [connectors] = useState([
     {
+      id: 'neo4j_db',
+      name: 'Neo4j Graph Database (v5.18.0)',
+      type: 'Property Graph & Cypher DB',
+      account: 'bolt://localhost:7687 | HTTP 7474',
+      status: 'Connected',
+      lastIngest: 'Vừa cập nhật (APOC Enabled)',
+      itemsCount: '491,200 Nodes | 884,000 Edges',
+      icon: Database,
+      color: '#3B82F6'
+    },
+    {
+      id: 'qdrant_db',
+      name: 'Qdrant Vector Engine (v1.8.2)',
+      type: 'HNSW Vector Search DB',
+      account: 'http://localhost:6333 | gRPC 6334',
+      status: 'Connected',
+      lastIngest: 'Realtime Indexer',
+      itemsCount: '128,400 Vectors (1536-dim)',
+      icon: Layers,
+      color: '#10B981'
+    },
+    {
       id: 'gdrive',
-      name: 'Google Drive / Sheets',
-      type: 'Cloud Storage',
+      name: 'Google Drive / Enterprise Vault',
+      type: 'Cloud Storage Connector',
       account: 'enterprise-data@graphmind.ai',
       status: 'Connected',
       lastIngest: '10 phút trước',
@@ -45,28 +67,6 @@ export const DataSourceManager = () => {
       itemsCount: '1,280 files monitored',
       icon: HardDrive,
       color: '#0A6E78'
-    },
-    {
-      id: 'adventure_works',
-      name: 'AdventureWorks ERP (PyMySQL)',
-      type: 'Relational DB',
-      account: 'db_admin@localhost:3306',
-      status: 'Connected',
-      lastIngest: '30 phút trước',
-      itemsCount: '128,400 Records',
-      icon: Database,
-      color: '#3B82F6'
-    },
-    {
-      id: 'cuad_legal',
-      name: 'CUAD Legal Contract Repository',
-      type: 'Document Store',
-      account: 'legal_vault_v2',
-      status: 'Connected',
-      lastIngest: '2 giờ trước',
-      itemsCount: '510 Contract PDFs',
-      icon: Server,
-      color: '#8B5CF6'
     }
   ]);
 
@@ -78,11 +78,11 @@ export const DataSourceManager = () => {
   ]);
 
   const [auditLogs, setAuditLogs] = useState([
-    { id: 'LOG-9041', timestamp: '2026-09-06 11:45:12', source: 'AEGIS Agent (WS-01)', action: 'Incremental Ingest', status: 'SUCCESS', details: 'Added 4 new Sales Orders from Sheets' },
-    { id: 'LOG-9040', timestamp: '2026-09-06 11:30:05', source: 'CUAD Contract Repository', action: 'Entity Extraction', status: 'SUCCESS', details: 'Extracted 42 Entities (Customers, Termination Clauses)' },
-    { id: 'LOG-9039', timestamp: '2026-09-06 11:00:00', source: 'AdventureWorks ERP', action: 'Scheduled Sync', status: 'SUCCESS', details: 'Updated 1,200 Customer Order records' },
-    { id: 'LOG-9038', timestamp: '2026-09-06 10:15:22', source: 'Google Drive Sync', action: 'OAuth Token Renewal', status: 'SUCCESS', details: 'OAuth token refreshed automatically' },
-    { id: 'LOG-9037', timestamp: '2026-09-06 09:40:11', source: 'AEGIS Agent (WS-04)', action: 'Heartbeat Lost', status: 'WARNING', details: 'Agent disconnected gracefully (Network timeout)' }
+    { id: 'LOG-9042', timestamp: '2026-09-08 11:32:05', source: 'Neo4j APOC Import Engine', action: 'Graph Triples Ingest', status: 'SUCCESS', details: 'Added 142 Nodes & 280 Relationships into neo4j_db (Port 7687)' },
+    { id: 'LOG-9041', timestamp: '2026-09-08 11:30:12', source: 'Qdrant HNSW Indexer', action: 'Dense Vector Embedding', status: 'SUCCESS', details: 'Indexed 85 Vectors (1536-dim Cosine) into qdrant_db (Port 6333)' },
+    { id: 'LOG-9040', timestamp: '2026-09-08 11:15:00', source: 'CUAD Contract Repository', action: 'Entity Extraction', status: 'SUCCESS', details: 'Extracted 42 Entities (Customers, Termination Clauses)' },
+    { id: 'LOG-9039', timestamp: '2026-09-08 10:45:00', source: 'Google Drive Sync', action: 'OAuth Token Renewal', status: 'SUCCESS', details: 'OAuth token refreshed automatically' },
+    { id: 'LOG-9038', timestamp: '2026-09-08 10:15:11', source: 'AEGIS Agent (WS-04)', action: 'Heartbeat Lost', status: 'WARNING', details: 'Agent disconnected gracefully (Network timeout)' }
   ]);
 
   const triggerManualSync = () => {
